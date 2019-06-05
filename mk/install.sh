@@ -496,9 +496,7 @@ install_coreos()
 {
     echo "Installing the agent..."
     mkdir -p /usr/share/oem/xs/
-    cp -f ${DATADIR}/xe-daemon \
-          ${DATADIR}/xe-linux-distribution \
-          ${DATADIR}/xe-update-guest-attrs /usr/share/oem/xs/
+    cp -f ${DATADIR}/xe-daemon ${DATADIR}/xe-linux-distribution /usr/share/oem/xs/
     cp -f ${DATADIR}/xen-vcpu-hotplug.rules /etc/udev/rules.d/
     cp -f ${DATADIR}/xe-linux-distribution.service /etc/systemd/system/
     systemctl enable /etc/systemd/system/xe-linux-distribution.service
@@ -513,6 +511,7 @@ case "${os_distro}" in
     debian|ubuntu|linx|yinhe)          select_pkgs_debian ;;
     xe-ddk|xe-sdk)                     select_pkgs_xe ;;
     CoreOS)                            select_pkgs_coreos ;;
+    "Container Linux by CoreOS")       select_pkgs_coreos ;;
     *)                  failure "Unknown Linux distribution \`${os_distro}'." ;;
 esac
 
