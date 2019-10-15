@@ -134,6 +134,9 @@ select_pkgs_rhel()
 	rhel7|centos7|oracle7|scientific7|neokylin7)
 	    # No additional kernel package
 	    ;;
+	rhel8|centos8|oracle8|scientific8|neokylin8)
+	    # No additional kernel package
+	    ;;
 	rhel3|fedora*)
 	    # Not officially supported therefore no additional packages required.
 	    ;;
