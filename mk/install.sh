@@ -137,6 +137,9 @@ select_pkgs_rhel()
 	rhel8|centos8|oracle8|scientific8|neokylin8)
 	    # No additional kernel package
 	    ;;
+	alpine3*)
+	    # No additional kernel package
+	    ;;
 	rhel3|fedora*)
 	    # Not officially supported therefore no additional packages required.
 	    ;;
@@ -510,6 +513,7 @@ install_coreos()
 case "${os_distro}" in
     rhel|centos|oracle|fedora)         select_pkgs_rhel ;;
     scientific|neokylin|asianux|turbo) select_pkgs_rhel ;;
+    alpine)                            select_pkgs_rhel ;;
     sles|"suse linux")                 select_pkgs_sles ;;
     debian|ubuntu|linx|yinhe)          select_pkgs_debian ;;
     xe-ddk|xe-sdk)                     select_pkgs_xe ;;
