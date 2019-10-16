@@ -132,10 +132,10 @@ select_pkgs_rhel()
 	rhel6|centos6|oracle6|scientific6|neokylin5|neokylin6|asianux4|turbo12)
 	    # No additional kernel package
 	    ;;
-	rhel7|centos7|oracle7|scientific7|neokylin7)
+	rhel7|centos7|oracle7|scientific7|neokylin7|cloudlinux7)
 	    # No additional kernel package
 	    ;;
-    rhel8|oracle8|centos8)
+    rhel8|oracle8|centos8|cloudlinux8)
 	    # No additional kernel package
 	    ;;
 	rhel3|fedora*)
@@ -517,6 +517,7 @@ install_coreos()
 case "${os_distro}" in
     rhel|centos|oracle|fedora)         select_pkgs_rhel ;;
     scientific|neokylin|asianux|turbo) select_pkgs_rhel ;;
+    cloudlinux)                        select_pkgs_rhel ;;
     sles|"suse linux")                 select_pkgs_sles ;;
     debian|ubuntu|linx|yinhe|Gooroom)  select_pkgs_debian ;;
     xe-ddk|xe-sdk)                     select_pkgs_xe ;;
