@@ -569,7 +569,7 @@ if [ -n "${ECRYPTFS_UTILS}" ] ; then
 	fi
     done
 fi
-if [ -n "${XGU}" ] && [ "${os_distro}" != FreeBSD ] ; then
+if [ -n "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
     for P in ${XGU} ; do
 	if [ ! -f "${P}" ] ; then
 	    echo "Warning: xe-guest-utilities ${P} not found."
@@ -577,7 +577,7 @@ if [ -n "${XGU}" ] && [ "${os_distro}" != FreeBSD ] ; then
 	fi
     done
 fi
-if [ -z "${XGU}" ] ; then
+if [ -z "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
     echo ""
     echo "Certain guest features will not be active until a version of "
     echo "xe-guest-utilities is installed."
