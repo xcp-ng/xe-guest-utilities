@@ -235,10 +235,10 @@ select_pkgs_freebsd()
     ERROR=$?
     if [ $ERROR != 0 ]
     then
-    	XGU="xe-guest-utilities"
+        XGU="xe-guest-utilities"
     else
-    	set $PKGNAME
-	PKGNAME="$1"
+        set $PKGNAME
+        PKGNAME="$1"
         echo "${PKGNAME} already installed"
     fi
 }
