@@ -478,7 +478,7 @@ identify_yinhe()
     fi
     
     yinhe_osname="Yinhe Kylin Linux ${major}.${minor}"
-    
+    write_to_output "${distro}" "${major}" "${minor}" "${yinhe_osname}"
 }
 
 identify_boot2docker()
@@ -495,7 +495,6 @@ identify_boot2docker()
     minor=$(awk -F. '{printf("%s.%s", $2, $3)}' /etc/version)
 
     write_to_output "boot2docker" "${major}" "${minor}" "boot2docker $(head -n 1 /etc/version)"
-    write_to_output "${distro}" "${major}" "${minor}" "${yinhe_osname}"
 }
 
 identify_freebsd()
