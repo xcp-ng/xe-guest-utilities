@@ -75,7 +75,7 @@ fi
 
 ARCH=$(uname -m | sed -e 's/i.86/i386/g')
 case "${ARCH}" in
-    i386|x86_64) ;;
+    i386|x86_64|amd64) ;;
     *)
 	echo "Architecture ${ARCH} is not supported"
 	exit 1
@@ -228,6 +228,21 @@ select_pkgs_xe()
     GUEST_PKG_TYPE=rpm
 
     select_rpm_utilities
+}
+
+select_pkgs_freebsd()
+{
+    GUEST_PKG_TYPE=pkg
+    PKGNAME=$(pkg info xe-guest-utilities 2>&1)
+    ERROR=$?
+    if [ $ERROR != 0 ]
+    then
+        XGU="xe-guest-utilities"
+    else
+        set $PKGNAME
+        PKGNAME="$1"
+        echo "${PKGNAME} already installed"
+    fi
 }
 
 update_lvm_configuration_required()
@@ -517,6 +532,14 @@ install_coreos()
     systemctl start xe-linux-distribution.service
 }
 
+install_freebsd()
+{
+    echo "Installing xe-guest-utilities from FreeBSD pkg..."
+    pkg install xe-guest-utilities
+    echo "Installation complete. Starting xenguest"
+    service xenguest start
+}
+
 case "${os_distro}" in
     rhel|centos|oracle|fedora)         select_pkgs_rhel ;;
     scientific|neokylin|asianux|turbo) select_pkgs_rhel ;;
@@ -525,6 +548,7 @@ case "${os_distro}" in
     debian|ubuntu|linx|yinhe|Gooroom)  select_pkgs_debian ;;
     xe-ddk|xe-sdk)                     select_pkgs_xe ;;
     *CoreOS)                            select_pkgs_coreos ;;
+    FreeBSD)                           select_pkgs_freebsd ;;
     *)                  failure "Unknown Linux distribution \`${os_distro}'." ;;
 esac
 
@@ -551,7 +575,7 @@ if [ -n "${ECRYPTFS_UTILS}" ] ; then
 	fi
     done
 fi
-if [ -n "${XGU}" ] ; then
+if [ -n "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
     for P in ${XGU} ; do
 	if [ ! -f "${P}" ] ; then
 	    echo "Warning: xe-guest-utilities ${P} not found."
@@ -559,7 +583,7 @@ if [ -n "${XGU}" ] ; then
 	fi
     done
 fi
-if [ -z "${XGU}" ] ; then
+if [ -z "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
     echo ""
     echo "Certain guest features will not be active until a version of "
     echo "xe-guest-utilities is installed."
@@ -677,6 +701,7 @@ case ${GUEST_PKG_TYPE} in
     rpm) install_rpms ;;
     deb) install_debs ;;
     coreos) install_coreos ;;
+    pkg) install_freebsd ;;
 esac
 
 if [ -n "${KERNEL}" -o -n "${XGU}" ] ; then

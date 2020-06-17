@@ -527,7 +527,27 @@ identify_boot2docker()
     minor=$(awk -F. '{printf("%s.%s", $2, $3)}' /etc/version)
 
     write_to_output "boot2docker" "${major}" "${minor}" "boot2docker $(head -n 1 /etc/version)"
+}
 
+identify_freebsd()
+{
+
+    if [ ! -x /usr/bin/uname ] || [ $(/usr/bin/uname -s) != "FreeBSD" ]
+    then
+        return 1
+    fi
+
+    distro="FreeBSD"
+    release=$(uname -r)
+    IFS="-"
+    set - $release
+    version=$1
+    IFS="."
+    set - $version
+    major=$1
+    minor=$2
+    osname="FreeBSD $release"
+    write_to_output "${distro}" "${major}" "${minor}" "${osname}"
 }
 
 if [ $# -eq 1 ] ; then
@@ -554,6 +574,7 @@ if [ -z "${TEST}" ] ; then
     identify_debian /etc/debian_version && exit 0
     identify_boot2docker /etc/boot2docker && exit 0
     identify_sangoma /etc/centos-release && exit 0
+    identify_freebsd && exit 0
 
 
     if [ $# -eq 1 ] ; then
