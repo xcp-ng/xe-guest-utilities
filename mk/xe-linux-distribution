@@ -229,11 +229,11 @@ identify_sles()
     fi
 
     eval $(sed -n \
+	       -e 's/^VERSION_ID="\([0-9]*\)\.\?\([0-9]*\)\?"$/major=\1;minor=\2;/gp' \
+	       -e 's/^PRETTY_NAME="SUSE L\(inux\|INUX\) Enterprise \([a-zA-Z0-9_]*\) \([0-9]*\)\( SP[0-9]*\)\?"/_major=\3;_pretty_name=\0;/gp' \
                -e 's/^SUSE L\(inux\|INUX\) Enterprise \([a-zA-Z0-9_]*\) \([0-9]*\) (.*)/_major=\3;_pretty_name="\0";/gp;' \
                -e 's/^VERSION = \([0-9]*\)$/major=\1;/gp;' \
                -e 's/^PATCHLEVEL = \([0-9]*\)$/minor=\1;/gp;' \
-	       -e 's/^PRETTY_NAME="SUSE L\(inux\|INUX\) Enterprise \([a-zA-Z0-9_]*\) \([0-9]*\)"/_major=\3;_pretty_name=\0;/gp' \
-	       -e 's/^VERSION="\([0-9]*\)"$/major=\1;/gp' \
 	       "${suse_release}")
 
     if [ -z "${major}" -o -z "${_major}" ] ; then
@@ -245,7 +245,7 @@ identify_sles()
     fi
 
     if [ -z "${minor}" ] ; then
-        minor=0
+	minor=0
     fi
 
     write_to_output "sles" "${major}" "${minor}" "${_pretty_name##*=}"
@@ -481,6 +481,38 @@ identify_yinhe()
     write_to_output "${distro}" "${major}" "${minor}" "${yinhe_osname}"
 }
 
+identify_gooroom()
+{
+    gooroom_release="$1"
+    local distro
+    local major
+    local minor
+    local description
+
+    if [ ! -f "${gooroom_release}" ] ; then
+	return 1
+    fi
+
+    eval $(sed -rn 's/^DISTRIB_ID=(.*)$/distro=\1;/gp;' ${gooroom_release})
+    if [ ${distro} != "Gooroom" ] ; then
+	return 1
+    fi
+
+    eval $(sed -rn 's/^DISTRIB_RELEASE=([0-9]).([0-9])$/major=\1;minor=\2;/gp;' ${gooroom_release})
+
+    if [ -z "${major}" ] ; then
+        return 1
+    fi
+
+    if [ -z "${minor}" ] ; then
+        minor=0
+    fi
+
+    eval $(sed -rn 's/^DISTRIB_DESCRIPTION=(.*)$/description=\1;/gp;' ${gooroom_release})
+
+    write_to_output "${distro}" "${major}" "${minor}" "${description}"
+}
+
 identify_boot2docker()
 {
     boot2docker_release="$1"
@@ -537,6 +569,7 @@ if [ -z "${TEST}" ] ; then
     #identify Linx disto before debian, as Linx has both linx_release and debian_version.
     identify_yinhe /etc/kylin-build   && exit 0
     identify_linx /etc/linx-release   && exit 0
+    identify_gooroom /etc/lsb-release && exit 0
     identify_lsb lsb_release         && exit 0
     identify_debian /etc/debian_version && exit 0
     identify_boot2docker /etc/boot2docker && exit 0
