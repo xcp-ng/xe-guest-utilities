@@ -66,7 +66,8 @@ if [ -z "${os_distro}" ] ; then
   fi
 
   if [ ! -f "${DATADIR}/versions.deb" -o ! -f "${DATADIR}/versions.rpm" ] ; then
-    echo "Fatal Error: versions.deb or versions.rpm not found in ${DATADIR}." exit 1
+    echo "Fatal Error: versions.deb or versions.rpm not found in ${DATADIR}."
+    exit 1
   fi
 
   eval $(${XE_LINUX_DISTRIBUTION})
@@ -93,7 +94,6 @@ case "${ARCH}" in
     exit 1
     ;;
 esac
-
 
 ################################
 # Configuration Update Checks
@@ -678,7 +678,7 @@ if [ -n "${ECRYPTFS_UTILS}" ] ; then
   done
 fi
 
-if [ -n "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
+if [ -n "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] && [ "${os_distro}" != "Alpine" ] ; then
   for P in ${XGU} ; do
     if [ ! -f "${P}" ] ; then
       echo "Warning: xe-guest-utilities ${P} not found."
@@ -687,7 +687,7 @@ if [ -n "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
   done
 fi
 
-if [ -z "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] ; then
+if [ -z "${XGU}" ] && [ "${os_distro}" != "FreeBSD" ] && [ "${os_distro}" != "Alpine" ] ; then
   echo ""
   echo "Certain guest features will not be active until a version of "
   echo "xe-guest-utilities is installed."
