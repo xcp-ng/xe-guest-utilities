@@ -40,10 +40,6 @@ while getopts d:hkm:n OPT ; do
 done
 
 
-if [ -z "${DATADIR}" ] ; then
-  DATADIR=$(dirname $0)
-fi
-
 if [ -z "${os_distro}" -a -n "${os_majorver}" ] || [ -n "${os_distro}" -a -z "${os_majorver}" ] ; then
   echo "Distribution name (-d) and major version (-m) must be specified"
   echo "together on the command line."
@@ -54,6 +50,10 @@ fi
 ###################################
 # Determine Variables For Distro 
 #################################
+
+if [ -z "${DATADIR}" ] ; then
+  DATADIR=$(dirname $0)
+fi
 
 if [ -z "${os_distro}" ] ; then
   if [ -z "${XE_LINUX_DISTRIBUTION}" ] ; then
@@ -461,7 +461,7 @@ select_rpm_utilities()
     source ${DATADIR}/versions.rpm
     XGU=
     for p in $(eval echo \${XE_GUEST_UTILITIES_PKG_FILE_${ARCH}}) ; do
-        XGU="$XGU ${DATADIR}/${p}"
+      XGU="$XGU ${DATADIR}/${p}"
     done
   else
     echo "Warning: Guest utilities not found in ${DATADIR}."
@@ -481,23 +481,17 @@ select_pkgs_rhel()
 	    fi
 	    ;;
 	rhel5|centos5|oracle5|scientific5)
-	    # No additional kernel package
-	    ;;
+      ;;  # No additional kernel package
 	rhel6|centos6|oracle6|scientific6|neokylin5|neokylin6|asianux4|turbo12)
-	    # No additional kernel package
-	    ;;
+      ;;  # No additional kernel package
 	rhel7|centos7|oracle7|scientific7|neokylin7|cloudlinux7)
-	    # No additional kernel package
-	    ;;
+      ;;  # No additional kernel package
 	rhel8|centos8|oracle8|scientific8|neokylin8|cloudlinux8)
-	    # No additional kernel package
-	    ;;
+      ;;  # No additional kernel package
 	sangoma*)
-	    # No additional kernel package
-	    ;;
+      ;;  # No additional kernel package
 	rhel3|fedora*)
-	    # Not officially supported therefore no additional packages required.
-	    ;;
+      ;;  # Not officially supported therefore no additional packages required.
 	*)
 	    os_support_failure "Unknown RedHat Linux variant \`${os_distro} ${os_majorver}'."
 	    ;;
@@ -654,11 +648,9 @@ case "${os_distro}" in
 esac
 
 
-
-
-
-
-
+###################################
+# Control Flow for All Functions 
+#################################
 
 if [ -n "${KERNEL}" ] ; then
   for K in ${KERNEL} ; do
@@ -753,11 +745,11 @@ done
 [ -n "${MKINITRD}" ] && echo -e "    - $(basename ${MKINITRD})"
 
 for E in ${ECRYPTFS_UTILS}; do
-    echo -e "    - $(basename ${E})"
+  echo -e "    - $(basename ${E})"
 done
 
 for P in ${XGU}; do
-    echo -e "    - $(basename ${P})"
+  echo -e "    - $(basename ${P})"
 done
 
 echo ""
