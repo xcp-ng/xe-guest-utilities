@@ -550,6 +550,24 @@ identify_freebsd()
     write_to_output "${distro}" "${major}" "${minor}" "${osname}"
 }
 
+identify_alpine()
+{
+    if [ ! -x /bin/uname ] || [ $(/bin/uname -s) != "Linux" ]
+    then
+        return 1
+    fi
+
+    distro="Alpine"
+    osname="Alpine Linux"
+    local major
+    local minor
+    major=$(cat /etc/os-release | grep -i '^VERSION_ID' | cut -c12- | rev | cut -c3- | rev)
+    minor=$(cat /etc/os-release | grep -i '^VERSION_ID' | cut -c17-)
+
+    write_to_output "${distro}" "${major}" "${minor}" "${osname}"
+}
+
+
 if [ $# -eq 1 ] ; then
     exec 1>"$1"
 fi
@@ -575,7 +593,7 @@ if [ -z "${TEST}" ] ; then
     identify_boot2docker /etc/boot2docker && exit 0
     identify_sangoma /etc/centos-release && exit 0
     identify_freebsd && exit 0
-
+    identify_alpine && exit 0
 
     if [ $# -eq 1 ] ; then
 	rm -f "$1"
