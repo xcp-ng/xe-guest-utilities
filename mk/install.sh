@@ -639,7 +639,7 @@ case "${os_distro}" in
     select_pkgs_freebsd
     ;;
   Alpine)
-    select_pkgs_freebsd
+    select_pkgs_alpine
     ;;
 
   *)
