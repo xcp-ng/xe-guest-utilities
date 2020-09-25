@@ -1,13 +1,14 @@
 package main
 
 import (
-	xenstoreclient "../xenstoreclient"
 	"errors"
 	"fmt"
-	"golang.org/x/sys/unix"
 	"os"
 	"strconv"
 	"strings"
+
+	xenstoreclient "../xenstoreclient"
+	"golang.org/x/sys/unix"
 )
 
 func die(format string, a ...interface{}) {

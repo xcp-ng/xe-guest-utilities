@@ -1,7 +1,6 @@
 package guestmetric
 
 import (
-	xenstoreclient "../xenstoreclient"
 	"bufio"
 	"bytes"
 	"fmt"
@@ -11,6 +10,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+
+	xenstoreclient "../xenstoreclient"
 )
 
 type Collector struct {

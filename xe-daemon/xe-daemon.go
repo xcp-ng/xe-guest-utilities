@@ -1,10 +1,6 @@
 package main
 
 import (
-	guestmetric "../guestmetric"
-	syslog "../syslog"
-	system "../system"
-	xenstoreclient "../xenstoreclient"
 	"flag"
 	"fmt"
 	"io"
@@ -15,6 +11,11 @@ import (
 	"strconv"
 	"syscall"
 	"time"
+
+	guestmetric "../guestmetric"
+	syslog "../syslog"
+	system "../system"
+	xenstoreclient "../xenstoreclient"
 )
 
 const (
