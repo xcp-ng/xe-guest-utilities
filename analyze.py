@@ -1,80 +1,100 @@
-import sys
-import argparse
+#! /usr/bin/env python3
+
+import os
 import json
+import shutil
+import tempfile
 
 
-def cnt_on_rule_id(issues, rule_id):
-    return len([issue for issue in issues if issue['rule_id'] == rule_id])
+def print_category(header, issues, base_path):
+    """
+    Organize and display the output of each issue.
+    """
+    print()
+    print()
+    print('=' * len(header))
+    print(header)
+    print('=' * len(header))
+
+    for f in {z['file'] for z in issues}:
+        out = (' ' + 'File: ' + f[len(base_path):])
+        print()
+        print('-' * len(out))
+        print(out)
+        print('-' * len(out))
+
+        for issue in issues:
+            if issue['file'] == f:
+                pad = ('     ')
+                print()
+                print(pad + 'Line Number: ' + issue['line'])
+                print(pad + 'Confidence: ' + issue['confidence'])
+                print(pad + 'Description: ' + issue['details'])
+                print(pad + 'Code: ' + issue['code'])
+                print(pad + 'GOSec Rule:' + issue['rule_id'])
 
 
-def write_issue(f, issue, idx):
-    f.write('Issue %d\\n' % idx)
-    for k, v in issue.iteritems():
-        f.write('|%s|%s|\\n' % (k, v))
+def analyze(results_file, base_path):
+    """
+    Parse and print the results from gosec audit.
+    """
+    # Load gosec json Results File
+    with open(results_file) as f:
+        issues = json.load(f)['Issues']
 
-
-def analyze(js, formatted_issues_f):
-    issues = js['Issues']
     if not issues:
-        print "Security check: no security issue detected"
-        return 0
+        print("Security Check: No Issues Detected!")
+        return ([], [], [])
 
-    for issue in issues:
-        f = issue['file']
-        f = '/'.join(f.split('/')[2:])
-        issue['file'] = f
-
-    must_fix = []
-    better_fix = []
-    for issue in issues:
-        if issue['severity'] == 'HIGH':
-            must_fix.append(issue)
-        else:
-            better_fix.append(issue)
-
-
-    with open(formatted_issues_f, 'w') as f:
-        idx = 1
-        f.write('\\n*Must fix issues*\\n')
-        print '======== Must fix the potential security issues ========'
-        for issue in must_fix:
-            print json.dumps(issue, indent=4)
-            write_issue(f, issue, idx)
-            idx += 1
-
-        f.write('\\n----\\n*Optinal fix issues*\\n')
-        print '======== Optional to fix the potential security issues ========'
-        for issue in better_fix:
-            print json.dumps(issue, indent=4)
-            write_issue(f, issue, idx)
-            idx += 1
-
-    if must_fix:
-        return 1
     else:
-        return 0
+        high_risk = list()
+        medium_risk = list()
+        low_risk = list()
+
+        # Sort Issues
+        for issue in issues:
+            if issue['severity'] == 'HIGH':
+                high_risk.append(issue)
+            elif issue['severity'] == 'MEDIUM':
+                medium_risk.append(issue)
+            elif issue['severity'] == 'LOW':
+                low_risk.append(issue)
+
+        # Print Summary
+        print()
+        print('Security Issue Summary:')
+        print('  Found ' + str(len(high_risk)) + ' High Risk Issues')
+        print('  Found ' + str(len(medium_risk)) + ' Medium Risk Issues')
+        print('  Found ' + str(len(low_risk)) + ' Low Risk Issues')
+
+        # Print Issues In Order of Importance
+        if high_risk:
+            header = ('=        High Security Risk Issues          =')
+            print_category(header, high_risk, base_path)
+
+        if medium_risk:
+            header = ('=        Medium Security Risk Issues        =')
+            print_category(header, medium_risk, base_path)
+
+        if low_risk:
+            header = ('=         Low Security Risk Issues          =')
+            print_category(header, low_risk, base_path)
+
+        return (high_risk, medium_risk, low_risk)
 
 
-def parse_args_or_exit(argv=None):
-    """
-    Parse command line options
-    """
-    parser = argparse.ArgumentParser(description="Analyze security check result")
-    parser.add_argument("-i", metavar="check_result",
-            dest="check_result", help="json file of check result")
-    parser.add_argument("issues", metavar="issues",
-            help="formatted issues")
+# Build Test Enviroment
+base_path = os.getcwd()
+test_path = tempfile.mkdtemp()
+results_file = test_path + '/results.json'
+os.chdir(test_path)
 
-    args = parser.parse_args(argv)
+# Run Test
+os.system('curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s 2.0.0')
+os.system('./bin/gosec -fmt=json -out=' + results_file + ' ' + base_path + '/...')
 
-    return args
+# Parse Results
+analyze(results_file, base_path)
 
-def main(argv):
-    args = parse_args_or_exit(argv)
-    check_result = args.check_result
-    with open(args.check_result) as f:
-        js = json.load(f)
-        sys.exit(analyze(js, args.issues))
-
-if __name__ == '__main__':
-    main(sys.argv[1:])
+# Close Test Enviroment
+shutil.rmtree(test_path)
