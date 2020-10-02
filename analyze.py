@@ -30,8 +30,8 @@ def print_category(header, issues, base_path):
                 print(pad + 'Line Number: ' + issue['line'])
                 print(pad + 'Confidence: ' + issue['confidence'])
                 print(pad + 'Description: ' + issue['details'])
-                print(pad + 'Code: ' + issue['code'])
-                print(pad + 'GOSec Rule:' + issue['rule_id'])
+                print(pad + 'Code: "' + issue['code'] + '"')
+                print(pad + 'GOSec Rule: ' + issue['rule_id'])
 
 
 def analyze(results_file, base_path):
