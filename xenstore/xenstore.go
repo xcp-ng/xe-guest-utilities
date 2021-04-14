@@ -1,7 +1,7 @@
 package main
 
 import (
-	xenstoreclient "../xenstoreclient"
+	xenstoreclient "xe-guest-utilities/xenstoreclient"
 	"errors"
 	"fmt"
 	"golang.org/x/sys/unix"

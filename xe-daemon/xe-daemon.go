@@ -1,10 +1,10 @@
 package main
 
 import (
-	guestmetric "../guestmetric"
-	syslog "../syslog"
-	system "../system"
-	xenstoreclient "../xenstoreclient"
+	guestmetric "xe-guest-utilities/guestmetric"
+	syslog "xe-guest-utilities/syslog"
+	system "xe-guest-utilities/system"
+	xenstoreclient "xe-guest-utilities/xenstoreclient"
 	"flag"
 	"fmt"
 	"io"

@@ -1,7 +1,7 @@
 package guestmetric
 
 import (
-	xenstoreclient "../xenstoreclient"
+	xenstoreclient "xe-guest-utilities/xenstoreclient"
 	"bufio"
 	"bytes"
 	"fmt"
