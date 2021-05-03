@@ -378,7 +378,7 @@ identify_sangoma()
     fi
 
     eval $(sed -rn \
-              's/^Sangoma Linux release \([0-9]*\)\.\([0-9]*\)\(\.[0-9]*\)\? (.*)/distro=sangoma;major=\1;minor=\2/gp;' \
+              's/^Sangoma Linux release ([0-9]*)\.([0-9]*).*$/distro=sangoma;major=\1;minor=\2/gp;' \
               "${sangoma_release}")
 
     if [ -z "${major}" -o -z "${distro}" ] ; then
