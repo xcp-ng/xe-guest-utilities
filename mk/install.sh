@@ -135,7 +135,7 @@ select_pkgs_rhel()
 	rhel7|centos7|oracle7|scientific7|neokylin7|cloudlinux7)
 	    # No additional kernel package
 	    ;;
-    rhel8|oracle8|centos8|cloudlinux8|rocky8)
+    rhel8|oracle8|centos8|cloudlinux8|rocky8|almalinux8)
 	    # No additional kernel package
 	    ;;
 	sangoma*)
@@ -543,7 +543,7 @@ install_freebsd()
 case "${os_distro}" in
     rhel|centos|oracle|fedora|rocky)   select_pkgs_rhel ;;
     scientific|neokylin|asianux|turbo) select_pkgs_rhel ;;
-    cloudlinux|sangoma)                select_pkgs_rhel ;;
+    cloudlinux|sangoma|almalinux)      select_pkgs_rhel ;;
     sles|"suse linux")                 select_pkgs_sles ;;
     debian|ubuntu|linx|yinhe|Gooroom)  select_pkgs_debian ;;
     xe-ddk|xe-sdk)                     select_pkgs_xe ;;
