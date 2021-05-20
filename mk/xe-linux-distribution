@@ -586,6 +586,7 @@ if [ -z "${TEST}" ] ; then
     identify_lsb lsb_release         && exit 0
     identify_debian /etc/debian_version && exit 0
     identify_boot2docker /etc/boot2docker && exit 0
+    identify_sangoma /etc/sangoma-release && exit 0
     identify_sangoma /etc/centos-release && exit 0
     identify_freebsd && exit 0
 
