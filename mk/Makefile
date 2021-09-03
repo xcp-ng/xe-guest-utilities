@@ -2,6 +2,10 @@ ifeq ($(COMPONENT),guest-utilities-rpm)
 include Makefile.rpm
 endif
 
+ifeq ($(COMPONENT),guest-utilities-rpm-systemd)
+include Makefile-systemd.rpm
+endif
+
 ifeq ($(COMPONENT),guest-utilities-deb)
 include Makefile.deb
 endif
