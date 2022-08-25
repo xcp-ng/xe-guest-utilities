@@ -3,8 +3,8 @@ Description=Linux Guest Agent
 ConditionVirtualization=xen
 
 [Service]
-ExecStartPre=/usr/share/oem/xs/xe-linux-distribution /var/cache/xe-linux-distribution
-ExecStart=/usr/share/oem/xs/xe-daemon
+ExecStartPre=/usr/sbin/xe-linux-distribution /var/cache/xe-linux-distribution
+ExecStart=/usr/sbin/xe-daemon
 
 [Install]
 WantedBy=multi-user.target
