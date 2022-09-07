@@ -104,13 +104,18 @@ failure()
 select_rpm_utilities()
 {
     if [ -f "${DATADIR}/versions.rpm" ] ; then
-	source ${DATADIR}/versions.rpm
-	XGU=
-	for p in $(eval echo \${XE_GUEST_UTILITIES_PKG_FILE_${ARCH}}) ; do
-	    XGU="$XGU ${DATADIR}/${p}"
-	done
+        source ${DATADIR}/versions.rpm
+        XGU=
+        if command -v systemctl >/dev/null 2>&1; then
+            LEGACY=
+        else
+            LEGACY="LEGACY_"
+        fi
+        for p in $(eval echo \${XE_GUEST_UTILITIES_PKG_FILE_${LEGACY}${ARCH}}) ; do
+            XGU="$XGU ${DATADIR}/${p}"
+        done
     else
-	echo "Warning: Guest utilities not found in ${DATADIR}."
+        echo "Warning: Guest utilities not found in ${DATADIR}."
     fi
 }
 
