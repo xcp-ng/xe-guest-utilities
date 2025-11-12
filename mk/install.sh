@@ -146,6 +146,9 @@ select_pkgs_rhel()
 	rhel9|oracle9|centos9|rocky9|cloudlinux9|almalinux9)
 	    # No additional kernel package
 	    ;;
+	rhel10|oracle10|centos10|rocky10|cloudlinux10|almalinux10)
+	    # No additional kernel package
+	    ;;
 	sangoma*)
 	    # No additional kernel package
 	    ;;
